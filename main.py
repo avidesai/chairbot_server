@@ -45,6 +45,7 @@ RobotController = RobotControllerClass(chair_ids)
 def index():
     return render_template('index.html')
 
+
 def gen(camera):
     while True:
         frame = camera.process()
@@ -110,7 +111,11 @@ def toggle_chair(command, id):
 # directly control the robot
 @app.route('/move/<direction>/<id>', methods = ['GET','POST'])
 def send_movement_command(direction, id):
-    if any(direction in d for d in ['forward','backward','left','right', 'stop']):
+    valid = [
+        'FORWARD','BACKWARD','LEFT','RIGHT','STOP',
+        'forward','backward','left','right', 'stop',
+    ]
+    if any(direction in d for d in valid):
         # new ROSLIB.Message({data: motion})
         if (direction == 'stop'):
             pub_stop_arr[int(id)].publish( direction.upper() )
